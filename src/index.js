@@ -1,6 +1,7 @@
 import { Client, Collection } from 'discord.js';
 import { chalk } from 'chalk';
 import dotenv from 'dotenv';
+import fs from 'fs';
 import path from 'path';
 import { stripIndents } from 'common-tags';
 
@@ -66,12 +67,18 @@ bot.on('error', e => {
   log.error(e);
 });
 
-if (process.env.DISCORD_BOT_TOKEN) {
-  bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
-} else {
-  const undefinedError = new Error(
-    'Token is undefined in the environment file.',
-  );
+if (fs.existsSync(path.resolve(path.join('./', '.env')))) {
+  if (process.env.DISCORD_BOT_TOKEN) {
+    bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
+  } else {
+    const undefinedError = new Error(
+      'Token is undefined in the environment file.',
+    );
 
-  log.severe(undefinedError);
+    log.severe(undefinedError);
+  }
+} else {
+  const existsError = new Error('The environment file does not exist.');
+
+  log.severe(existsError);
 }
