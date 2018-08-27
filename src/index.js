@@ -20,13 +20,13 @@ bot.on('ready', () => {
   bot.user.setAFK(false);
 
   // Set a game for the bot
-  bot.user.setActivity('SwiftTalk', { type: 'PLAYING' });
+  bot.user.setActivity('Swifty', { type: 'PLAYING' });
 
   // Set the process title
   (title => {
     process.title = title;
     process.stdout.write(`\u001B]0;${title}\u0007`);
-  })(`SwiftTalk Statistics Bot (Running as user: ${bot.user.username})`);
+  })(`Swifty Statistics Bot (Running as user: ${bot.user.username})`);
 
   // Display bot statistics
   log.char(
@@ -44,7 +44,7 @@ bot.on('ready', () => {
   delete bot.user.email; // No need to store these
   delete bot.user.verified;
 
-  log.info(`SwiftTalk statistics bot was successfully loaded.`);
+  log.info(`Swifty statistics bot was successfully loaded.`);
 });
 
 bot.on('message', msg => {
