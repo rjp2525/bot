@@ -3,6 +3,7 @@ import { chalk } from 'chalk';
 import dotenv from 'dotenv';
 import path from 'path';
 import { stripIndents } from 'common-tags';
+
 import { Logger } from './managers';
 
 const bot = (global.bot = exports.client = new Client({ autoReconnect: true }));
@@ -11,7 +12,7 @@ const log = (bot.log = new Logger(bot));
 log.inject();
 
 dotenv.config({
-  path: path.join(__dirname, '../', '.env')
+  path: path.join(__dirname, '../', '.env'),
 });
 
 bot.on('ready', () => {
@@ -28,20 +29,25 @@ bot.on('ready', () => {
   })(`SwiftTalk Statistics Bot (Running as user: ${bot.user.username})`);
 
   // Display bot statistics
-  log.char('\u2799', `Current Statistics:
-    \u2022 Bot Account:      ${bot.user.username}#${bot.user.discriminator} <ID: ${bot.user.id}>
+  log.char(
+    '\u2799',
+    `Current Statistics:
+    \u2022 Bot Account:      ${bot.user.username}#${
+      bot.user.discriminator
+    } <ID: ${bot.user.id}>
     \u2022 Total Users:      ${bot.users.filter(user => !user.bot).size}
     \u2022 Total Bots:       ${bot.users.filter(user => user.bot).size}
     \u2022 Total Channels:   ${bot.channels.size}
-    \u2022 Total Servers:    ${bot.guilds.size}`);
+    \u2022 Total Servers:    ${bot.guilds.size}`,
+  );
 
-  delete bot.user.email;      // No need to store these
+  delete bot.user.email; // No need to store these
   delete bot.user.verified;
 
   log.info(`SwiftTalk statistics bot was successfully loaded.`);
 });
 
-bot.on('message', (msg) => {
+bot.on('message', msg => {
   // do something with the message
   // something like the below to keep track of messages the bot sends
   // stats.increment(`messages-${bot.user.id === msg.author.id ? 'sent' : 'received'}`);
@@ -60,4 +66,12 @@ bot.on('error', e => {
   log.error(e);
 });
 
-bot.login(process.env.DISCORD_BOT_TOKEN);
+if (process.env.DISCORD_BOT_TOKEN) {
+  bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
+} else {
+  const undefinedError = new Error(
+    'Token is undefined in the environment file.',
+  );
+
+  log.severe(undefinedError);
+}
