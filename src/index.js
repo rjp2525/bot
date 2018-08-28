@@ -6,8 +6,11 @@ import path from 'path';
 import { stripIndents } from 'common-tags';
 
 import { Logger } from './managers';
+import { MessageHandler } from './messagehandler';
 
 const bot = (global.bot = exports.client = new Client({ autoReconnect: true }));
+
+const messageHandler = new MessageHandler(bot);
 
 const log = (bot.log = new Logger(bot));
 log.inject();
@@ -51,7 +54,7 @@ bot.on('ready', () => {
 bot.on('message', msg => {
   // This checks if the 'msg' property wasn't sent by the bot.
   if (msg.author.id != bot.user.id) {
-    
+    messageHandler.handle(msg);
   }
   
   // do something with the message
