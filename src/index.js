@@ -49,6 +49,11 @@ bot.on('ready', () => {
 });
 
 bot.on('message', msg => {
+  // This checks if the 'msg' property wasn't sent by the bot.
+  if (msg.author.id != bot.user.id) {
+    
+  }
+  
   // do something with the message
   // something like the below to keep track of messages the bot sends
   // stats.increment(`messages-${bot.user.id === msg.author.id ? 'sent' : 'received'}`);
