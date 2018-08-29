@@ -1,9 +1,6 @@
-import { Client, Collection } from 'discord.js';
-import { chalk } from 'chalk';
+import { Client } from 'discord.js';
 import dotenv from 'dotenv';
-import fs from 'fs';
 import path from 'path';
-import { stripIndents } from 'common-tags';
 
 import { Logger } from './managers';
 import { CommandHandler } from './handlers';
@@ -19,9 +16,7 @@ dotenv.config({
 });
 
 commandHandler.on('command', msg => {
-  console.log('received command on the listener');
-
-  msg.channel.reply('I see you.');
+  msg.channel.send('Hello :)');
 });
 
 bot.on('ready', () => {

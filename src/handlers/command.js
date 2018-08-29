@@ -19,12 +19,12 @@ class CommandHandler extends EventEmitter {
    * @memberof CommandHandler
    */
   check(message) {
-    const commandRegex = new RegExp(`/([${this.modifier}][A-z])\w+`);
+    const commandRegex = new RegExp(`\([${this.modifier}][A-z])\\w+`, 'gim');
     const found = message.match(commandRegex);
 
     if (!found) {
       return false;
-    } else if (found.length > 0) {
+    } else if (found.length === 1) {
       return true;
     } else if (found.length < 0) {
       return false;
@@ -48,7 +48,7 @@ class CommandHandler extends EventEmitter {
       return;
     }
 
-    this.emit('command', callback(message));
+    this.emit('command', message);
   }
 }
 
