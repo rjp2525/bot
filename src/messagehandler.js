@@ -15,7 +15,11 @@ export class MessageHandler {
 
         // Check if the message starts with 'Hey swifty'
         // Takes the first two words and drops the ', ' that is appended at the end.
-        const firstTwoWords = message.content.replace(/(([^\s]+\s\s*){2})(.*)/,"$1").slice(0, -2);
+        var firstTwoWords = message.content.replace(/(([^\s]+\s\s*){2})(.*)/,"$1").trim();
+
+        // Removes any punctuation.
+        firstTwoWords = firstTwoWords.replace(/[.,\/#!$%\^&\*;:{}=\-_`~()]/g,"");
+
         if (firstTwoWords.toLowerCase() == 'hey swifty') {
             this.handleHeySwifty(message);
         }
@@ -25,7 +29,7 @@ export class MessageHandler {
      * Handles actions for the 'Hey swifty' command. 
      */
     handleHeySwifty(message) {
-        msg = message.toLowerCase();
+        const msg = message.content.toLowerCase();
         // Run through all possible command scenarios
         if (msg.includes('help')) {
             message.channel.send('Here\'s a list of things I can do: **list**');
