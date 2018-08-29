@@ -19,15 +19,19 @@ export class MessageHandler {
         if (firstTwoWords.toLowerCase() == 'hey swifty') {
             this.handleHeySwifty(message);
         }
-
-        console.log(firstTwoWords);
-        console.log(this.bot.user.id);
     }
 
     /**
      * Handles actions for the 'Hey swifty' command. 
      */
     handleHeySwifty(message) {
-        message.channel.send('That\'s me!');
+        msg = message.toLowerCase();
+        // Run through all possible command scenarios
+        if (msg.includes('help')) {
+            message.channel.send('Here\'s a list of things I can do: **list**');
+        } else {
+            // If none of the commands are triggered, just show it's active:
+            message.channel.send('That\'s me!');
+        }
     }
 }
