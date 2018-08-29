@@ -22,17 +22,11 @@ class CommandHandler extends EventEmitter {
     const commandRegex = new RegExp(`\([${this.modifier}][A-z])\\w+`, 'gim');
     const found = message.match(commandRegex);
 
-    if (!found) {
-      return false;
-    } else if (found.length === 1) {
-      return true;
-    } else if (found.length < 0) {
-      return false;
-    } else if (found.length > 1) {
+    if (!found && found.length > 1 && found.length <= 0) {
       return false;
     }
 
-    return false;
+    return true;
   }
 
   /**
@@ -49,6 +43,8 @@ class CommandHandler extends EventEmitter {
     }
 
     this.emit('command', message);
+
+    return;
   }
 }
 
