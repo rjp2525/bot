@@ -11,7 +11,7 @@ class Logger {
    * Creates an instance of Logger.
    * @param bot
    *
-   * @memberOf Logger
+   * @memberof Logger
    */
   constructor(bot) {
     this.bot = bot;
@@ -51,7 +51,7 @@ class Logger {
       log: console.log,
       info: console.info,
       error: console.error,
-      debug: console.debug
+      debug: console.debug,
     };
 
     console._original = original;
