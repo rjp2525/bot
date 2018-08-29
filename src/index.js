@@ -6,17 +6,22 @@ import path from 'path';
 import { stripIndents } from 'common-tags';
 
 import { Logger } from './managers';
-import { MessageHandler } from './messagehandler';
+import { CommandHandler } from './handlers';
 
 const bot = (global.bot = exports.client = new Client({ autoReconnect: true }));
-
-const messageHandler = new MessageHandler(bot);
+const commandHandler = new CommandHandler(bot, '>');
 
 const log = (bot.log = new Logger(bot));
 log.inject();
 
 dotenv.config({
   path: path.join(__dirname, '../', '.env'),
+});
+
+commandHandler.on('command', msg => {
+  console.log('received command on the listener');
+
+  msg.channel.reply('I see you.');
 });
 
 bot.on('ready', () => {
@@ -54,9 +59,9 @@ bot.on('ready', () => {
 bot.on('message', msg => {
   // This checks if the 'msg' property wasn't sent by the bot.
   if (msg.author.id != bot.user.id) {
-    messageHandler.handle(msg);
+    commandHandler.handle(msg);
   }
-  
+
   // do something with the message
   // something like the below to keep track of messages the bot sends
   // stats.increment(`messages-${bot.user.id === msg.author.id ? 'sent' : 'received'}`);
@@ -75,18 +80,4 @@ bot.on('error', e => {
   log.error(e);
 });
 
-if (fs.existsSync(path.resolve(path.join('./', '.env')))) {
-  if (process.env.DISCORD_BOT_TOKEN) {
-    bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
-  } else {
-    const undefinedError = new Error(
-      'Token is undefined in the environment file.',
-    );
-
-    log.severe(undefinedError);
-  }
-} else {
-  const existsError = new Error('The environment file does not exist.');
-
-  log.severe(existsError);
-}
+bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
