@@ -22,7 +22,7 @@ class CommandHandler extends EventEmitter {
     const commandRegex = new RegExp(`\([${this.modifier}][A-z])\\w+`, 'gim');
     const found = message.match(commandRegex);
 
-    if (!found && found.length > 1 && found.length <= 0) {
+    if (found && found.length > 1 && found.length <= 0) {
       return false;
     }
 
