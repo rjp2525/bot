@@ -2,3 +2,5 @@ build
 node_modules
 env.json
 .env
+*-v8.log
+v8.json
