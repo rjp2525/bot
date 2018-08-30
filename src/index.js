@@ -2,7 +2,7 @@ import { Client } from 'discord.js';
 import dotenv from 'dotenv';
 import path from 'path';
 
-import { Logger } from './managers';
+import { Logger, Stats } from './managers';
 import { CommandHandler } from './handlers';
 
 const bot = (global.bot = exports.client = new Client({ autoReconnect: true }));
@@ -11,12 +11,27 @@ const commandHandler = new CommandHandler(bot, '>');
 const log = (bot.log = new Logger(bot));
 log.inject();
 
+const stats = (bot.stats = new Stats(bot));
+
 dotenv.config({
   path: path.join(__dirname, '../', '.env'),
 });
 
 commandHandler.on('command', msg => {
-  msg.channel.send('Hello :)');
+  let key = `commands-${msg.author.id}-${msg.guild.id}.${msg.channel.id}`;
+  stats.increment(key);
+
+  /**
+   * TODO: This needs a better system.
+   *
+   * Commands should have a base class then each command extends,
+   * eg. class HelpCommand extends BaseCommand {} or something.
+   *
+   * In the mean time, the command handler class should at least
+   * return the command separate from the arguments to make it a
+   * little easier for comparing them.
+   */
+  msg.channel.send(`Total commands run (Key: \`${key}\`): ${stats.get(key)}`);
 });
 
 bot.on('ready', () => {
@@ -57,11 +72,8 @@ bot.on('message', msg => {
     commandHandler.handle(msg);
   }
 
-  // do something with the message
-  // something like the below to keep track of messages the bot sends
-  // stats.increment(`messages-${bot.user.id === msg.author.id ? 'sent' : 'received'}`);
-  // This needs to be an async/queue thing because API is rate limited
-  //
+  stats.increment(`messages-${bot.user.id === msg.author.id ? 'sent' : 'received'}`);
+
   // if !msg.guild then it's a direct message to the bot
 });
 
