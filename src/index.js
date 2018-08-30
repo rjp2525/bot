@@ -84,7 +84,7 @@ bot.on('guildCreate', guild => {
 });
 
 bot.on('error', e => {
-  log.error(e);
+  log.severe(e);
 });
 
 bot.login(process.env.DISCORD_BOT_TOKEN).catch(e => log.severe(e));
